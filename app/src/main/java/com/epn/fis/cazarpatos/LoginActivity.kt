@@ -71,11 +71,17 @@ class LoginActivity : AppCompatActivity() {
         //EncryptedSharedPreference
         manejadorArchivo= EncriptedSharedPreferencesManager(this)
         manejadorArchivo.SaveInformation(listadoAGrabar)
+        //FileInternalManager
+        manejadorArchivo= FileInternalManager(this)
+        manejadorArchivo.SaveInformation(listadoAGrabar)
+        //FileExternalManager
+        manejadorArchivo= FileExternalManager(this)
+        manejadorArchivo.SaveInformation(listadoAGrabar)
     }
     private fun LeerDatosDePreferencias(){
-        manejadorArchivo = SharedPreferencesManager(this)
         var listadoLeido : Pair<String, String>
         //SharedPreference
+        manejadorArchivo = SharedPreferencesManager(this)
         listadoLeido = manejadorArchivo.ReadInformation()
         if(listadoLeido.first != null){
             checkBoxRecordarme.isChecked = true
@@ -84,6 +90,22 @@ class LoginActivity : AppCompatActivity() {
         editTextPassword.setText ( listadoLeido.second )
         //EncryptedSharedPreference
         manejadorArchivo = EncriptedSharedPreferencesManager(this)
+        listadoLeido = manejadorArchivo.ReadInformation()
+        if(listadoLeido.first != null){
+            checkBoxRecordarme.isChecked = true
+        }
+        editTextEmail.setText ( listadoLeido.first )
+        editTextPassword.setText ( listadoLeido.second )
+        //FileInternalManager
+        manejadorArchivo = FileInternalManager(this)
+        listadoLeido = manejadorArchivo.ReadInformation()
+        if(listadoLeido.first != null){
+            checkBoxRecordarme.isChecked = true
+        }
+        editTextEmail.setText ( listadoLeido.first )
+        editTextPassword.setText ( listadoLeido.second )
+        //FileExternalManager
+        manejadorArchivo = FileExternalManager(this)
         listadoLeido = manejadorArchivo.ReadInformation()
         if(listadoLeido.first != null){
             checkBoxRecordarme.isChecked = true

@@ -10,8 +10,7 @@ val masterKey= MasterKey.Builder(actividad)
     .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
     .build()
     val sharedPreferences= EncryptedSharedPreferences.create(
-        actividad,
-        //context
+        actividad,//context
         "secret_shared_prefs",// filename
         masterKey,
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
@@ -19,7 +18,7 @@ val masterKey= MasterKey.Builder(actividad)
     )
     override fun SaveInformation(datosAGrabar:Pair<String,String>){
         val editor = sharedPreferences.edit()
-        editor.putString(LOGIN_KEY,datosAGrabar.second)
+        editor.putString(LOGIN_KEY,datosAGrabar.first)
         editor.putString(PASSWORD_KEY,datosAGrabar.second)
         editor.apply()
     }

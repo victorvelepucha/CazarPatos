@@ -37,13 +37,9 @@ android {
 }
 
 dependencies {
-// Import the BoM for the Firebase platform
     implementation(platform(libs.firebase.bom))
-    // Declare the dependencies for the desired Firebase products, without specifying versions
-    // For example, declare the dependencies for Firebase Authentication and Cloud Firestore
-    implementation(libs.firebase.auth.ktx)
-    implementation(libs.firebase.firestore.ktx)
-    //implementation(libs.firebase.auth)
+    implementation(libs.google.firebase.auth.ktx)
+    implementation(libs.google.firebase.firestore.ktx)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

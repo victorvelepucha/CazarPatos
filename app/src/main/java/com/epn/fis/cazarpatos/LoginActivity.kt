@@ -1,73 +1,75 @@
 package com.epn.fis.cazarpatos
 
+import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
-import android.util.Patterns
+import android.widget.Button
+import android.widget.EditText
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var emailInputLayout: TextInputLayout
-    private lateinit var emailEditText: TextInputEditText
-    private lateinit var passwordInputLayout: TextInputLayout
-    private lateinit var passwordEditText: TextInputEditText
-    private lateinit var loginButton: MaterialButton
-
+    lateinit var editTextEmail: EditText
+    lateinit var editTextPassword:EditText
+    lateinit var buttonLogin: Button
+    lateinit var buttonNewUser:Button
+    lateinit var mediaPlayer: MediaPlayer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_login)
-
-        // Initialize views
-        emailInputLayout = findViewById(R.id.emailInputLayout)
-        emailEditText = findViewById(R.id.emailEditText)
-        passwordInputLayout = findViewById(R.id.passwordInputLayout)
-        passwordEditText = findViewById(R.id.passwordEditText)
-        loginButton = findViewById(R.id.loginButton)
-
-        // Set up login button click listener
-        loginButton.setOnClickListener {
-            validateAndLogin()
+        /*ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }*/
+        //Inicialización de variables
+        editTextEmail = findViewById(R.id.editTextEmail)
+        editTextPassword = findViewById(R.id.editTextPassword)
+        buttonLogin = findViewById(R.id.buttonLogin)
+        buttonNewUser = findViewById(R.id.buttonNewUser)
+        //Eventos clic
+        buttonLogin.setOnClickListener {
+            val email = editTextEmail.text.toString()
+            val clave = editTextPassword.text.toString()
+            //Validaciones de datos requeridos y formatos
+            if(!validateRequiredData())
+                return@setOnClickListener
+            //Si pasa validación de datos requeridos, ir a pantalla principal
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra(EXTRA_LOGIN, email)
+            startActivity(intent)
+            finish()
         }
+        buttonNewUser.setOnClickListener{
+
+        }
+        mediaPlayer=MediaPlayer.create(this, R.raw.title_screen)
+        mediaPlayer.start()
     }
-
-    private fun validateAndLogin() {
-        val email = emailEditText.text.toString().trim()
-        val password = passwordEditText.text.toString()
-
-        var isValid = true
-
-        // Validate email
-        if (!isValidEmail(email)) {
-            emailInputLayout.error = getString(R.string.email_error)
-            isValid = false
-        } else {
-            emailInputLayout.error = null
+    private fun validateRequiredData():Boolean{
+        val email = editTextEmail.text.toString()
+        val password = editTextPassword.text.toString()
+        if (email.isEmpty()) {
+            editTextEmail.setError(getString(R.string.error_email_required))
+            editTextEmail.requestFocus()
+            return false
         }
-
-        // Validate password
-        if (!isValidPassword(password)) {
-            passwordInputLayout.error = getString(R.string.password_error)
-            isValid = false
-        } else {
-            passwordInputLayout.error = null
+        if (password.isEmpty()) {
+            editTextPassword.setError(getString(R.string.error_password_required))
+            editTextPassword.requestFocus()
+            return false
         }
-
-        // If all validations pass, proceed with login
-        if (isValid) {
-            // Login logic would go here
-            // For now, just clear errors
-            emailInputLayout.error = null
-            passwordInputLayout.error = null
+        if (password.length < 3) {
+            editTextPassword.setError(getString(R.string.error_password_min_length))
+            editTextPassword.requestFocus()
+            return false
         }
+        return true
     }
-
-    private fun isValidEmail(email: String): Boolean {
-        return email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    }
-
-    private fun isValidPassword(password: String): Boolean {
-        // Password must be at least 8 characters and contain only numbers
-        return password.length >= 8 && password.all { it.isDigit() }
+    override fun onDestroy() {
+        mediaPlayer.release()
+        super.onDestroy()
     }
 }
+

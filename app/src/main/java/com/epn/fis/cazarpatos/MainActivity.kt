@@ -180,6 +180,7 @@ class MainActivity : AppCompatActivity() {
         builder
             .setMessage(getString(R.string.dialog_message_congratulations, counter))
             .setTitle(getString(R.string.dialog_title_game_end))
+            .setIcon(R.drawable.duck_hunt_logo)
             .setPositiveButton(getString(R.string.button_restart)) { _, _ ->
                 restartGame()
             }

@@ -3,9 +3,11 @@ package com.epn.fis.cazarpatos
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
@@ -30,14 +32,15 @@ class LoginActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }*/
-        //Inicialización de variables
-        auth = Firebase.auth // Initialize Firebase Auth
         manejadorArchivo = SharedPreferencesManager(this)
         editTextEmail = findViewById(R.id.editTextEmail)
         editTextPassword = findViewById(R.id.editTextPassword)
         buttonLogin = findViewById(R.id.buttonLogin)
         buttonNewUser = findViewById(R.id.buttonNewUser)
         checkBoxRecordarme = findViewById(R.id.checkBoxRecordarme)
+        // Initialize Firebase Auth
+        auth = Firebase.auth
+
         //Trae info de Shared Preferences
         LeerDatosDePreferencias()
         //Eventos clic
@@ -50,16 +53,34 @@ class LoginActivity : AppCompatActivity() {
             //Guardar datos en preferencias.
             GuardarDatosEnPreferencias()
             //Si pasa validación de datos requeridos, ir a pantalla principal
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra(EXTRA_LOGIN, email)
-            startActivity(intent)
-            finish()
+//            val intent = Intent(this, MainActivity::class.java)
+//            intent.putExtra(EXTRA_LOGIN, email)
+//            startActivity(intent)
+//            finish()
+            AutenticarUsuario(email, clave)
         }
         buttonNewUser.setOnClickListener{
 
         }
         mediaPlayer=MediaPlayer.create(this, R.raw.title_screen)
         mediaPlayer.start()
+    }
+    fun AutenticarUsuario(email:String, password:String){
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Log.d(EXTRA_LOGIN, "signInWithEmail:success " + auth.currentUser!!.email)
+                    //Si pasa validación de datos requeridos, ir a pantalla principal
+                    val intencion = Intent(this, MainActivity::class.java)
+                    intencion.putExtra(EXTRA_LOGIN, auth.currentUser!!.email)
+                    startActivity(intencion)
+                    //finish()
+                } else {
+                    Log.w(EXTRA_LOGIN, "signInWithEmail:failure", task.exception)
+                    Toast.makeText(baseContext, task.exception!!.message,
+                        Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 
     private fun GuardarDatosEnPreferencias(){

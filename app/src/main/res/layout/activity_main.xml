@@ -6,14 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_game"
-    android:padding="32dp"
+    android:paddingTop="128dp"
     tools:context=".MainActivity">
+
     <ImageView
         android:id="@+id/imageViewDuck"
         android:layout_width="100dp"
         android:layout_height="100dp"
         app:srcCompat="@drawable/duck"
-        tools:layout_editor_absoluteX="141dp"
+        tools:layout_editor_absoluteX="241dp"
         tools:layout_editor_absoluteY="239dp" />
 
     <ImageView
